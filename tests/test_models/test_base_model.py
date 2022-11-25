@@ -30,3 +30,28 @@ class TestBaseModel(unittest.TestCase):
         obj = self.obj
         self.assertIsInstance(obj.updated_at, datetime)
         self.assertEqual(obj.created_at, obj.updated_at)
+
+    def test_str(self):
+        obj = self.obj
+        sample = "[{}] ({}) ({})".format("BaseModel", obj.id, obj.__dict__)
+        self.assertEqual(str(obj), sample)
+
+    def test_save(self):
+        obj = self.obj
+        test_data = obj.save()
+        self.assertIsInstance(test_data, datetime)
+
+    def test_to_dict(self):
+         obj = self.obj
+         test_dict = obj.to_dict()
+         self.assertTrue("__class__" in test_dict)
+         self.assertIsInstance(test_dict["__class__"], str)
+         self.assertTrue("id" in test_dict)
+         self.assertIsInstance(test_dict["id"], str)
+         self.assertTrue("created_at" in test_dict)
+         self.assertIsInstance(test_dict["created_at"], str)
+         self.assertTrue("updated_at" in test_dict)
+         self.assertIsInstance(test_dict["updated_at"], str)
+         obj.number = 89
+         test_dict = obj.to_dict()
+         self.assertTrue("number" in test_dict)
