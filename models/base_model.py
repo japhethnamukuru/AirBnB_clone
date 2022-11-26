@@ -10,9 +10,20 @@ from uuid import uuid4
 class BaseModel:
     """The base model for all the other classes"""
 
-    def __init__(self):
-        self.id = str(uuid4())
-        self.created_at = self.updated_at = datetime.now()
+    def __init__(self, *args, **kwargs):
+        if kwargs:
+            for key in kwargs:
+                if key == '__class__':
+                    continue
+                elif key in ('created_at', 'updated_at'):
+                    isoformat = '%Y-%m-%dT%H:%M:%S.%f'
+                    setattr(self, key, datetime.strptime(kwargs[key], isoformat))
+                else:
+                    setattr(self, key, kwargs[key])
+                self.id = str(uuid4())
+        else:
+            self.id = str(uuid4())
+            self.created_at = self.updated_at = datetime.now()
 
 
     def __str__(self):

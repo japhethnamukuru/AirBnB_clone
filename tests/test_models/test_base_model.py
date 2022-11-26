@@ -55,3 +55,21 @@ class TestBaseModel(unittest.TestCase):
          obj.number = 89
          test_dict = obj.to_dict()
          self.assertTrue("number" in test_dict)
+
+
+    def test_from_dict(self):
+        obj = self.obj.to_dict()
+        new_obj = BaseModel(**obj)
+        self.assertIsInstance(new_obj, BaseModel)
+        self.assertTrue('__class_' not in new_obj.__dict__)
+        self.assertTrue(hasattr(new_obj, 'id'))
+        self.assertTrue(hasattr(new_obj, 'created_at'))
+        self.assertTrue(hasattr(new_obj, 'updated_at'))
+        new_obj.number = 89
+        self.assertTrue(hasattr(new_obj, 'number'))
+
+        # type instances
+        self.assertIsInstance(new_obj.id, str)
+        self.assertIsInstance(new_obj.created_at, datetime)
+        self.assertIsInstance(new_obj.updated_at, datetime)
+
