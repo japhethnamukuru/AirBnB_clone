@@ -30,14 +30,14 @@ class BaseModel:
     def __str__(self):
         """return the string representation of the instance"""
 
-        return "[{}] ({}) ({})".format(self.__class__.__name__, self.id, self.__dict__)
+        return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
 
     def save(self):
         """update the updated at attribute"""
 
         self.updated_at = datetime.now()
-        model.storage.new(self)
-        model.storage.save()
+        models.storage.new(self)
+        models.storage.save()
 
     def to_dict(self):
         """Return a dictionary instance"""

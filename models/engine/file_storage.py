@@ -46,15 +46,18 @@ class FileStorage:
         """
 
         temp = {}
-        for id, obj in self.objects.items():
+        for id, obj in self.__objects.items():
             temp[id] = obj.to_dict()
         with open(self.__file_path, 'w') as file_obj:
-            json.dump(temp, file_object)
+            json.dump(temp, file_obj)
 
     def reload(self):
-        if self.__file_path:
-            with open(self.file_path) as file_obj:
-                __objects = json.load(file_obj)
-            return __objects
-        else:
-            pass
+        try:
+            with open(self.__file_path, 'r') as file_obj:
+                objects = json.load(file_obj)
+                for id, obj in objects.items():
+                    object_instance = models.dummy_classes[obj['__class__']](**obj)
+                    self.__objects[id] = object_instance
+
+        except Exception as e:
+            print(e)
