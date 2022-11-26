@@ -4,6 +4,7 @@
     This module contatins the file storage class in the engine package
 """
 import json
+import models
 
 
 class FileStorage:
@@ -16,15 +17,39 @@ class FileStorage:
 
     
     # public instance methods
-    def all(self):
-        return self.__objects
+    def all(self, cls=None):
+        """
+            return the objects dict
+        
+        """
+
+        if not cls:
+            return self.__objects
+        objects = {}
+        for key in self.__objects.keys():
+            if (key.split(".")[0] == cls.__name__):
+                objects.update({key: self.__objects[key]})
+        return objects
+
 
     def new(self, obj):
-        self.__objects.update({obj.__class__.__name__: obj})
+        """
+            create a new object and add it the objects dict
+        """
+
+        key = "{}.{}".format(type(obj).__name__, obj.id)
+        self.__objects[key] = obj
 
     def save(self):
-        with open(__file_path, 'a') as file_obj:
-            json.dump(__objects, file_object)
+        """
+            save objects in the json file
+        """
+
+        temp = {}
+        for id, obj in self.objects.items():
+            temp[id] = obj.to_dict()
+        with open(self.__file_path, 'w') as file_obj:
+            json.dump(temp, file_object)
 
     def reload(self):
         if self.__file_path:
