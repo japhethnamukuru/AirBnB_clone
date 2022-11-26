@@ -56,8 +56,8 @@ class FileStorage:
             with open(self.__file_path, 'r') as file_obj:
                 objects = json.load(file_obj)
                 for id, obj in objects.items():
-                    object_instance = models.dummy_classes[obj['__class__']](**obj)
+                    object_instance = models.test_classes[obj['__class__']](**obj)
                     self.__objects[id] = object_instance
 
         except Exception as e:
-            print(e)
+            pass
