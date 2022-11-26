@@ -5,6 +5,7 @@
 """
 from datetime import datetime
 from uuid import uuid4
+import models
 
 
 class BaseModel:
@@ -35,7 +36,8 @@ class BaseModel:
         """update the updated at attribute"""
 
         self.updated_at = datetime.now()
-        return self.updated_at
+        model.storage.new(self)
+        model.storage.save()
 
     def to_dict(self):
         """Return a dictionary instance"""
