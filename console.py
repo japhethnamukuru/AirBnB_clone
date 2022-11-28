@@ -6,11 +6,22 @@
 import cmd
 
 
-class HBNBCommand(Cmd.cmd):
+class HBNBCommand(cmd.Cmd):
     """
         Inherits from the Cmd super class from the cmd module
     """
-    pass
+    
+    prompt  = "(hbnb) "
 
-if __name__ = '__main__':
+    def do_EOF(self, arg):
+        """End of File command to exit the program"""
+
+        return True
+
+    def do_quit(self, arg):
+        """Quit command to exit the program"""
+
+        return True
+
+if __name__ == '__main__':
     HBNBCommand().cmdloop()
