@@ -4,6 +4,7 @@
 """
 import cmd
 import models
+import re
 
 
 class HBNBCommand(cmd.Cmd):
@@ -12,6 +13,16 @@ class HBNBCommand(cmd.Cmd):
     """
     
     prompt  = "(hbnb) "
+
+    @classmethod
+    def fetch_command(cls, command):
+        commands = {"all": cls.do_all, "show": cls.do_show,
+                "destroy": cls.do_destroy, "update": cls.do_update,
+                "count": cls.do_count}
+        if command in commands:
+            return commands[command]
+        else:
+            return None
 
     def do_EOF(self, arg):
         """End of File command to exit the program"""
@@ -148,8 +159,56 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** class name missing **")
 
-	
+    def do_count(self, arg):
+        """
+        count number of instances
+        """
+        count = 0
+        if arg:
+            arg = arg.split()
+            if arg[0] in models.test_classes:
+                for instance, obj in models.storage.all().items():
+                    if instance.split('.')[0] == arg[0]:
+                        count += 1
+            else:
+                print("** class doesn't exist **")
+        else:
+            for instance, obj in models.storage.all().items():
+                count += 1
+        print(count)
 
+
+    def default(self, line):
+        """
+        handle invalid commands and
+        special commands like <class name>.<command>()
+        """
+        match = re.fullmatch(r"[A-Za-z]+\.[A-Za-z]+\(.*?\)", line)
+        if match:
+            splited = line.split('.')
+            if splited[0] in models.test_classes:
+                parsed = splited[1].split("(")
+                parsed[1] = parsed[1].strip(")")
+                args = parsed[1].split(",")
+                args = [arg.strip() for arg in args]
+                if len(args) >= 3:
+                    temp = args[2]
+                    args = [arg.strip('"') for arg in args[:2]]
+                    args.append(temp)
+                else:
+                    args = [arg.strip('"') for arg in args]
+                command = self.fetch_command(parsed[0])
+                if command:
+                    reconstructed_args = [arg for arg in args]
+                    reconstructed_args.insert(0, splited[0])
+                    reconstructed_command = " ".join(reconstructed_args)
+                    command(self, reconstructed_command)
+                else:
+                    print("*** Unknown syntax: {}".format(line))
+            else:
+                print("** class doesn't exist **")
+        else:
+            print("*** Unknown syntax: {}".format(line))
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
