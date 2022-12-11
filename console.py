@@ -8,11 +8,8 @@ import re
 
 
 class HBNBCommand(cmd.Cmd):
-    """
-        Inherits from the Cmd super class from the cmd module
-    """
-    
-    prompt  = "(hbnb) "
+    """Inherits from the Cmd super class from the cmd module"""
+    prompt = "(hbnb)"
 
     @classmethod
     def fetch_command(cls, command):
@@ -93,7 +90,6 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** class name missing **")
 
-
     def do_destroy(self, arg):
         """ Deletes an instance based on the class name and id"""
         if arg:
@@ -113,7 +109,6 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
         else:
             print("** class name missing **")
-
 
     def do_all(self, arg):
         """string representation of all instances"""
